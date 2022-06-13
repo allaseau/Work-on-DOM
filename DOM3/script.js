@@ -1,22 +1,41 @@
-let random = () => {
-    let r = Math.floor(Math.random() * 256);
-    let g = Math.floor(Math.random() * 256);
-    let b = Math.floor(Math.random() * 256);
-    return `rgb(${r}, ${g}, ${b})`;
-};
+let randomHslColorBg = () => {
+    let h = Math.floor(Math.random() * 360);
+    let s = Math.floor(Math.random() * 100);
+    let l = Math.floor(Math.random() * 100);
+    return `hsl(${h}, ${s}%, ${l}%)`;
+}
+
+let blackOrWhiteTxt = (bgColor) => {
+    let hsl = bgColor.split('(')[1].split(')')[0].split(',');
+    let h = parseInt(hsl[0]);
+    let s = parseInt(hsl[1]);
+    let l = parseInt(hsl[2]);
+    if (l < 50) {
+        return 'white';
+    } else {
+        return 'black';
+    }
+}
 
 let article = document.querySelector('article');
 let learners = ['Tanguy','Kevin','Mariya','Antoine','Latifa','Melih','Sebastien'];
+let shuffle = learners
+  .map(value => ({ value, sort: Math.random() }))
+  .sort((a, b) => a.sort - b.sort)
+  .map(({ value }) => value)
 
-for(i=0; i<learners.length; i++){
+for (let i = 0; i < learners.length; i++) {
     let newSection = document.createElement('section');
-    let newArticle = document.createElement('article');
     let newP = document.createElement('p');
-    let newText = document.createTextNode(learners[i]);
-    let bgColor=random();
-    newSection.style.backgroundColor = bgColor;
-    newP.appendChild(newText);
-    newArticle.appendChild(newP);
-    newSection.appendChild(newArticle);
+    let newText = document.createTextNode('');
+    let newText2 = document.createTextNode(shuffle[i]);
+    let newColor = randomHslColorBg();
+    let textColor = blackOrWhiteTxt(newColor);
+    newSection.style.backgroundColor = newColor;
+    newP.style.color = textColor;
+    newP.appendChild(newText2);
+    newSection.style.color = textColor;
+    newSection.appendChild(newP);
+    newSection.appendChild(newText);
     article.appendChild(newSection);
 };
